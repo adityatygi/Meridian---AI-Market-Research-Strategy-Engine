@@ -220,7 +220,6 @@ backend/
 │   ├── research.py             # Create + inspect research jobs (the core workflow)
 │   ├── reports.py              # Fetch generated reports
 │   ├── evidence.py              # Fetch raw evidence records
-│   └── feedback.py               # Reviewer feedback on reports
 ├── repositories/                # One repository per table — all Supabase reads/writes
 ├── services/
 │   └── research_service.py       # Bridges the API layer to the AI pipeline
@@ -270,7 +269,6 @@ Nine ordered migrations build the schema incrementally:
 | 005 | Validation Records | `validation_records` |
 | 006 | Memory | `memory_records` — `pgvector` column for future semantic search |
 | 007 | Reports | `reports` |
-| 008 | Feedback | `feedback` |
 | 009 | Indexes | Indexes on `evidence.job_id`, `planner_tasks.job_id`, and an `ivfflat` vector index on `memory_records.embedding` |
 
 `research_jobs.created_by` and `feedback.reviewer_id` both reference `auth.users(id)`, tying every record directly to a Supabase Auth identity — this is what makes per-user data isolation possible.
