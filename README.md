@@ -25,474 +25,835 @@
 
 <br/>
 
-## Table of Contents
+### An autonomous multi-agent AI system that transforms a research query into a structured, evidence-backed, and fully cited market research report.
 
-- [What This Project Is](#what-this-project-is)
-- [Highlights](#highlights)
-- [System Architecture](#system-architecture)
-- [The Multi-Agent Research Pipeline](#the-multi-agent-research-pipeline)
-- [Backend — FastAPI Service](#backend--fastapi-service)
-- [Frontend — React + Vite Dashboard](#frontend--react--vite-dashboard)
-- [End-to-End User Flow](#end-to-end-user-flow)
-- [Tech Stack](#tech-stack)
-- [Getting the Project Running Locally](#getting-the-project-running-locally)
-- [Security Notes](#security-notes)
-- [Project Status](#project-status)
+> Meridian automates the market research workflow by planning research tasks, searching the web, extracting and validating evidence, generating a structured report, and linking report findings back to their supporting sources.
 
-<br/>
+---
 
-## What This Project Is
+## 📌 Table of Contents
 
-This project is an AI-powered market research analyst. A signed-in user submits a research brief — for example *"Analyze the competitive landscape of the EV battery market in Southeast Asia"* — and behind the scenes a pipeline of seven specialized AI agents works in sequence to:
+* [Project Overview](#-project-overview)
+* [Business Problem](#-business-problem)
+* [Project Goal](#-project-goal)
+* [Key Features](#-key-features)
+* [System Architecture](#-system-architecture)
+* [Multi-Agent Research Pipeline](#-multi-agent-research-pipeline)
+* [Backend](#-backend)
+* [Frontend](#-frontend)
+* [Database](#-database)
+* [Technology Stack](#-technology-stack)
+* [Project Structure](#-project-structure)
+* [API Endpoints](#-api-endpoints)
+* [Getting Started](#-getting-started)
+* [Environment Variables](#-environment-variables)
+* [Sample Research Query](#-sample-research-query)
+* [Screenshots](#-screenshots)
+* [Documentation](#-documentation)
+* [Reliability and Error Handling](#-reliability-and-error-handling)
+* [Evaluation](#-evaluation)
+* [Known Limitations](#-known-limitations)
+* [Future Improvements](#-future-improvements)
+* [Deployment](#-deployment)
+* [Project Highlights](#-project-highlights)
 
-| Step | What happens |
-|:---:|---|
-| 1 | Break the brief into a structured, searchable research plan |
-| 2 | Search the live web for relevant, credible sources |
-| 3 | Extract concrete, quotable evidence from each source |
-| 4 | Cross-check that evidence for reliability |
-| 5 | Turn validated evidence into a polished, structured report |
-| 6 | Attach every claim in the report back to its original citation |
+---
 
-The result is served through a McKinsey-styled web dashboard, where the user watches the pipeline run in real time and then reads the final report through a **Report / Evidence / Sources** tabbed view — every key finding traceable back to a live web source.
+# 🔎 Project Overview
 
-<br/>
+Meridian is an AI-powered market research and strategy engine designed to automate the workflow normally performed by market researchers, business analysts, strategy teams, and consultants.
 
-## Highlights
+Instead of manually searching multiple websites, collecting information, validating evidence, preparing citations, and writing a report, Meridian uses a **multi-agent AI pipeline** to perform these stages systematically.
 
-<table>
-<tr>
-<td width="33%" valign="top">
+A user provides a natural-language research query, and Meridian processes it through specialized AI agents to produce a structured research result with supporting evidence and source traceability.
 
-**Multi-agent pipeline**
+### Example
 
-Seven purpose-built agents → Planner, Research, Extraction, Validation, Citation, Report, Linker. Each with one job, chained into a single fail-fast pipeline.
+A user can submit a query such as:
 
-</td>
-<td width="33%" valign="top">
+> **"Analyze the impact of Generative AI on the education industry in India."**
 
-**Real authentication**
+The system then:
 
-Full Supabase Auth with server-verified JWTs, not a demo gate. Every research job is scoped to its owner and enforced at the API layer.
+1. Creates a research plan.
+2. Searches relevant web sources.
+3. Extracts useful evidence.
+4. Validates the evidence.
+5. Builds citations.
+6. Generates a structured report.
+7. Links report findings to supporting evidence and sources.
 
-</td>
-<td width="33%" valign="top">
+---
 
-**Full traceability**
+# 💼 Business Problem
 
-Every key finding in the final report links back to the exact evidence and web source that supports it. Nothing is asserted without a citation trail.
+Traditional market research can require significant manual effort.
 
-</td>
-</tr>
-</table>
+Researchers commonly need to:
 
-<br/>
+* Search multiple websites.
+* Identify relevant sources.
+* Extract useful information.
+* Verify evidence.
+* Check source credibility and relevance.
+* Organize findings.
+* Prepare citations.
+* Convert research into a structured report.
 
-## System Architecture
+Meridian automates this workflow through a coordinated AI-agent architecture.
 
-The project is split into two independently deployed halves that communicate over a REST API secured with Supabase Auth.
+### Target Users
 
-```mermaid
-flowchart TB
-    classDef client fill:#DCEBFB,stroke:#185FA5,stroke-width:1.5px,color:#042C53,font-weight:bold
-    classDef backend fill:#CFF0E3,stroke:#0F6E56,stroke-width:1.5px,color:#04342C,font-weight:bold
-    classDef pipeline fill:#F3EFE6,stroke:#8a8578,stroke-width:1.5px,color:#2C2C2A,font-weight:bold
-    classDef external fill:#F0EAFB,stroke:#534AB7,stroke-width:1.5px,color:#26215C,font-weight:bold
-    classDef grp fill:transparent,stroke:#999,stroke-dasharray:3 3,color:#666
+* Strategy Consultants
+* Business Analysts
+* Market Researchers
+* Product Managers
+* Startup Founders
+* Students and Researchers
 
-    subgraph CLIENT["Client — React + Vite"]
-        direction LR
-        A["Login / Signup"] --> B["Dashboard"] --> C["Research progress"] --> D["Report view<br/>Report · Evidence · Sources"]
-    end
+---
 
-    subgraph API["Backend — FastAPI"]
-        direction LR
-        AUTH["Auth check<br/>Supabase JWT"] --> ROUTES["/api/research · /reports<br/>/evidence · /feedback"]
-    end
+# 🎯 Project Goal
 
-    subgraph PIPELINE["AI pipeline — 7 sequential agents"]
-        direction LR
-        P1["1 · Planner"] --> P2["2 · Research"] --> P3["3 · Extraction"] --> P4["4 · Validation"] --> P5["5 · Citations"] --> P6["6 · Report"] --> P7["7 · Linker"]
-    end
+The goal of Meridian is to build a production-style AI research assistant that can transform a single research query into a **structured, evidence-backed, and traceable market research report**.
 
-    subgraph EXT["External services"]
-        direction LR
-        LLM["Gemini LLM"]
-        SEARCH["Tavily search"]
-        DB["Supabase<br/>Postgres + pgvector"]
-    end
+The system focuses on:
 
-    D -- "HTTPS + bearer token" --> AUTH
-    ROUTES --> P1
-    P2 <--> SEARCH
-    P1 & P3 & P4 & P6 <--> LLM
-    ROUTES <--> DB
+* Research automation
+* Evidence quality
+* Source traceability
+* Structured reporting
+* Multi-agent orchestration
+* Backend and database integration
 
-    class A,B,C,D client
-    class AUTH,ROUTES backend
-    class P1,P2,P3,P4,P5,P6,P7 pipeline
-    class LLM,SEARCH,DB external
-    class CLIENT,API,PIPELINE,EXT grp
+---
+
+# ✨ Key Features
+
+* 🤖 Multi-agent AI research workflow
+* 🧠 Automated research planning
+* 🌐 Live web research using Tavily
+* 📑 Evidence extraction from sources
+* ✅ Evidence validation
+* 🔗 Citation and source linking
+* 📊 Structured strategy report generation
+* 🔍 Evidence-to-report traceability
+* 🔐 Supabase authentication
+* ⚡ FastAPI backend
+* 💻 React/Vite frontend
+* 🗄️ Supabase PostgreSQL database
+* 🧠 Google Gemini for AI processing
+* 🛡️ Error handling and retry mechanisms
+
+---
+
+# 🏗️ System Architecture
+
+Meridian follows a multi-agent architecture where each agent is responsible for a specific stage of the research workflow.
+
+```text
+                         USER
+                           │
+                           ▼
+                    Research Query
+                           │
+                           ▼
+                    Planner Agent
+                           │
+                           ▼
+                    Research Agent
+                           │
+                           ▼
+                 Evidence Extraction
+                           │
+                           ▼
+                  Validation Agent
+                           │
+                           ▼
+                  Citation Builder
+                           │
+                           ▼
+                     Report Agent
+                           │
+                           ▼
+                   Report Linker
+                           │
+                           ▼
+              Final Research Report
+                           │
+                           ▼
+                    Supabase DB
 ```
 
-| Layer | Responsibility |
-|---|---|
-| **Frontend** | React 19 SPA (Vite) — authentication, brief submission, an animated progress screen, and a tabbed report viewer. |
-| **Backend** | FastAPI service — enforces authentication, orchestrates the AI pipeline per request, and persists every intermediate artifact so any stage of a job can be queried later. |
-| **Database** | Supabase (managed Postgres) — structured relational storage, plus a `pgvector`-backed `memory_records` table for future semantic recall. |
+### Main Components
 
-<br/>
+| Component        | Responsibility                                       |
+| ---------------- | ---------------------------------------------------- |
+| React Frontend   | User interface and research dashboard                |
+| FastAPI Backend  | API layer and orchestration                          |
+| Planner Agent    | Creates structured research tasks                    |
+| Research Agent   | Searches relevant web sources                        |
+| Extraction Agent | Extracts useful evidence                             |
+| Validation Agent | Validates extracted evidence                         |
+| Citation Builder | Creates citation information                         |
+| Report Agent     | Generates the final structured report                |
+| Report Linker    | Connects report findings with evidence and citations |
+| Supabase         | Stores application and research data                 |
+| Gemini           | AI reasoning and generation                          |
+| Tavily           | Web search                                           |
 
-## The Multi-Agent Research Pipeline
+---
 
-The heart of the project is `ai/pipeline/research_pipeline.py`, which orchestrates seven sequential stages. Each stage has a single, focused responsibility and hands a typed data structure to the next.
+# 🤖 Multi-Agent Research Pipeline
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant U as User
-    participant API as FastAPI
-    participant Pl as Planner
-    participant R as Research
-    participant Ex as Extraction
-    participant V as Validation
-    participant CB as Citations
-    participant Rp as Report
-    participant RL as Linker
-    participant DB as Supabase
+## 1. Planner Agent
 
-    U->>API: POST /api/research { query }
-    API->>DB: create research_job (researching)
-    API->>Pl: create_plan(query)
-    Pl-->>API: research tasks
-    API->>R: research(task) per task
-    R-->>API: sources (via Tavily)
-    API->>Ex: extract(source) per source
-    Ex-->>API: evidence items
-    API->>V: validate(evidence, sources)
-    V-->>API: validation verdicts
-    API->>CB: build(sources)
-    CB-->>API: citations
-    API->>Rp: generate_report(...)
-    Rp-->>API: report
-    API->>RL: link_report(...)
-    RL-->>API: linked report
-    API->>DB: persist report, mark completed
-    API-->>U: job_id, title, executive summary
+The Planner Agent converts the user's research query into smaller, structured research tasks.
+
+### Input
+
+Natural-language research query.
+
+### Output
+
+* Research tasks
+* Objectives
+* Dependencies
+* Search requirements
+
+---
+
+## 2. Research Agent
+
+The Research Agent searches the web for relevant information using the **Tavily Search API**.
+
+It collects information such as:
+
+* Source URL
+* Source title
+* Publisher
+* Search metadata
+* Relevant content
+
+The purpose of this stage is to provide reliable source material for downstream agents.
+
+---
+
+## 3. Evidence Extraction Agent
+
+The Extraction Agent processes the retrieved sources and identifies useful factual information.
+
+It extracts relevant claims and supporting information using Gemini.
+
+### Example output
+
+* Claim
+* Supporting excerpt
+* Entity
+* Topic
+* Relevance information
+
+---
+
+## 4. Validation Agent
+
+The Validation Agent evaluates extracted evidence before it is used in the final report.
+
+It checks factors such as:
+
+* Claim validity
+* Relevance
+* Source credibility
+* Recency
+* Duplicate information
+* Conflicting information
+
+This stage helps improve the reliability of the research output.
+
+---
+
+## 5. Citation Builder
+
+The Citation Builder prepares citation information for validated sources.
+
+This allows the final report to maintain a connection between findings and their supporting sources.
+
+---
+
+## 6. Report Agent
+
+The Report Agent takes the validated research evidence and generates the structured research report.
+
+The report can contain sections such as:
+
+* Executive Summary
+* Key Findings
+* Market Signals
+* Competitive Observations
+* Strategic Implications
+* Recommendations
+* Evidence / Source Information
+
+The Report Agent focuses on converting validated research into a readable and structured report.
+
+---
+
+## 7. Report Linker
+
+The Report Linker is the final traceability stage.
+
+It connects report findings with their corresponding:
+
+* Evidence
+* Evidence IDs
+* Sources
+* Citations
+
+This makes it possible to trace a final finding back to the research evidence supporting it.
+
+### Final Pipeline
+
+```text
+Planner
+   ↓
+Research
+   ↓
+Extraction
+   ↓
+Validation
+   ↓
+Citation Builder
+   ↓
+Report Agent
+   ↓
+Report Linker
+   ↓
+Final Evidence-Backed Report
 ```
 
-| Stage | Module | Responsibility |
-|---|---|---|
-| **1. Planning** | `ai/planner/planner_agent.py` | Decomposes the raw research brief into a list of discrete, searchable `ResearchTask`s. |
-| **2. Research** | `ai/research/research_agent.py` | Executes a live web search per task (via Tavily) and returns candidate `Source`s. |
-| **3. Extraction** | `ai/extraction/extraction_agent.py` | Reads each source and pulls out concrete, quotable `Evidence` (claim + supporting quote). |
-| **4. Validation** | `ai/validation/validation_agent.py` | Cross-checks each piece of evidence against its source and assigns a confidence verdict. |
-| **5. Citation Building** | `ai/report/citation_builder.py` | Converts raw sources into properly formatted citation objects. |
-| **6. Report Generation** | `ai/report/report_agent.py` | Synthesizes validated evidence into a structured `Report` (title, executive summary, key findings). |
-| **7. Report Linking** | `ai/report/report_linker.py` | Rewrites the report so every key finding links to its supporting evidence and citation — powers the Evidence / Sources tabs. |
+---
 
-> **Fail-fast by design.** If any stage returns an empty result (no tasks, no sources, no evidence...), the pipeline raises immediately instead of silently producing a hollow report, and the job is marked `failed`.
+# ⚙️ Backend
 
-**LLM & search providers**
-- **Gemini** (`google-genai`) — the reasoning engine behind the Planner, Extraction, Validation, and Report agents (`ai/llm/gemini.py`).
-- **Tavily** — the live web search provider used by the Research agent (`ai/browser/tavily_search.py`), with a `mock_search.py` fallback for offline development.
+The backend is built using **FastAPI and Python**.
 
-<br/>
+It provides APIs for:
 
-## Backend — FastAPI Service
+* Creating research jobs
+* Running the research workflow
+* Retrieving research tasks
+* Retrieving sources
+* Retrieving evidence
+* Retrieving validation results
+* Retrieving generated reports
 
-**Location:** `Backend McKinsey/mckinsey-research-engine/`
+The backend also connects the AI pipeline with the database layer.
 
-<details>
-<summary><b>Backend folder structure</b></summary>
+### Backend Layers
 
-```
-backend/
-├── main.py                  # FastAPI app factory, middleware, routers
-├── core/
-│   ├── config.py             # Pydantic settings loaded from .env
-│   ├── auth.py                # Supabase JWT verification dependency
-│   ├── errors.py              # Centralized AppError → HTTP response mapping
-│   └── logging.py             # Structured logging configuration
-├── middleware/
-│   └── request_id.py          # Attaches a unique request ID to every request
-├── api/
-│   ├── research.py             # Create + inspect research jobs (the core workflow)
-│   ├── reports.py              # Fetch generated reports
-│   ├── evidence.py              # Fetch raw evidence records
-├── repositories/                # One repository per table — all Supabase reads/writes
-├── services/
-│   └── research_service.py       # Bridges the API layer to the AI pipeline
-└── db/
-    ├── supabase_client.py         # Supabase client singleton
-    └── migrations/                  # Ordered SQL migrations (001 → 009)
+```text
+API Layer
+    ↓
+Service Layer
+    ↓
+AI Research Pipeline
+    ↓
+Repository Layer
+    ↓
+Supabase PostgreSQL
 ```
 
-</details>
+### Main Repository Components
 
-### Authentication & Authorization
+* `ResearchJobRepository`
+* `PlannerTaskRepository`
+* `SourceRepository`
+* `EvidenceRepository`
+* `ValidationRepository`
+* `ReportRepository`
 
-Every protected route depends on `get_current_user` (`backend/core/auth.py`):
+---
 
-1. The frontend sends the Supabase session's access token as a `Bearer` token in the `Authorization` header.
-2. The backend calls `supabase.auth.get_user(token)` to verify the token server-side against Supabase.
-3. If valid, the authenticated `user` object is injected into the route; if not, a `401` is raised.
-4. On job-scoped routes (`/api/research/{job_id}/...`), an additional `_ensure_owner` check confirms the requesting user actually created that job — returning `403` otherwise.
+# 💻 Frontend
 
-> No research job or report is ever visible to a user who didn't create it, even if they know the job's UUID.
+The frontend provides the user interface for interacting with Meridian.
 
-### API Surface
+It allows users to:
 
-| Method | Route | Purpose |
-|:---:|---|---|
-| `GET` | `/` | Service metadata / liveness |
-| `GET` | `/health` | Health check for uptime monitors / deploy platforms |
-| `GET` | `/api/research/` | List all research jobs owned by the current user |
-| `POST` | `/api/research/` | Submit a new brief → runs the full pipeline synchronously → returns the completed job |
-| `GET` | `/api/research/{job_id}` | Fetch job status/metadata |
-| `GET` | `/api/research/{job_id}/tasks` | Planner-generated research tasks |
-| `GET` | `/api/research/{job_id}/sources` | Sources discovered during research |
-| `GET` | `/api/research/{job_id}/evidence` | Extracted evidence items |
-| `GET` | `/api/research/{job_id}/validations` | Validation verdicts per evidence item |
-| `GET` | `/api/research/{job_id}/report` | The final generated report |
+* Sign in / create an account
+* Enter research queries
+* Start research
+* Monitor research progress
+* View sources
+* View evidence
+* View validation results
+* Read generated reports
+* Explore citations and linked evidence
 
-### Database Schema (Supabase / Postgres)
+The frontend is built using **React and Vite**.
 
-Nine ordered migrations build the schema incrementally:
+---
 
-| # | Migration | Table(s) created |
-|:---:|---|---|
-| 001 | Initial schema / Research Jobs | `research_jobs` |
-| 002 | Planner Tasks | `planner_tasks` |
-| 003 | Sources | `sources` |
-| 004 | Evidence | `evidence` |
-| 005 | Validation Records | `validation_records` |
-| 006 | Memory | `memory_records` — `pgvector` column for future semantic search |
-| 007 | Reports | `reports` |
-| 009 | Indexes | Indexes on `evidence.job_id`, `planner_tasks.job_id`, and an `ivfflat` vector index on `memory_records.embedding` |
+# 🗄️ Database
 
-`research_jobs.created_by` and `feedback.reviewer_id` both reference `auth.users(id)`, tying every record directly to a Supabase Auth identity — this is what makes per-user data isolation possible.
+Meridian uses **Supabase PostgreSQL** for persistent data storage.
 
-### Backend Environment Variables
+Important data areas include:
 
-```env
-# Search / AI provider keys used by the research pipeline
-GOOGLE_API_KEY=          # Gemini API key
-TAVILY_API_KEY=          # Tavily web search API key
+| Table / Data Area    | Purpose                                   |
+| -------------------- | ----------------------------------------- |
+| `research_jobs`      | Stores research requests                  |
+| `planner_tasks`      | Stores generated research tasks           |
+| `sources`            | Stores retrieved sources                  |
+| `evidence`           | Stores extracted evidence                 |
+| `validation_records` | Stores evidence validation                |
+| `reports`            | Stores generated reports                  |
+| `feedback`           | Stores user feedback                      |
+| `memory_records`     | Foundation for future memory capabilities |
 
-# Supabase project (Project Settings > API in the Supabase dashboard)
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_KEY=            # SERVICE ROLE key — backend only, never expose to the frontend
+The database allows the research workflow to maintain state and preserve traceability between different pipeline stages.
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+* React
+* Vite
+* JavaScript
+* CSS
+* React Router
+* Supabase Client
+
+## Backend
+
+* Python
+* FastAPI
+* Uvicorn
+* Pydantic
+* Python-dotenv
+
+## AI & Search
+
+* Google Gemini API
+* Tavily Search API
+
+## Database
+
+* Supabase
+* PostgreSQL
+
+## Deployment
+
+* Vercel
+* Render
+
+---
+
+# 📁 Project Structure
+
+The repository is organized as follows:
+
+```text
+Meridian---AI-Market-Research-Strategy-Engine/
+│
+├── backened/
+│   ├── ai/
+│   ├── backend/
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── LICENSE
+│   └── README.md
+│
+├── frontened/
+│
+├── meridian-Screenshots/
+│   ├── Create_account_page.png
+│   ├── Dashboard (2).png
+│   ├── Evidence.png
+│   ├── Evidences.png
+│   ├── Laded(100%).png
+│   ├── Loading(25%).png
+│   ├── loading(75%).png
+│   ├── Part_of_report.png
+│   ├── Part_of_report (2).png
+│   ├── Past_Searches.png
+│   ├── Query_input.png
+│   ├── Report_view.png
+│   ├── Sources.png
+│   ├── citations.png
+│   ├── sign-in_page.png
+│   └── signing_up.png
+│
+├── project-docs/
+│   ├── API.md
+│   ├── ARCHITECTURE.md
+│   ├── DEPLOYMENT.md
+│   └── EVALUATION.md
+│
+├── LICENSE
+└── README.md
 ```
 
-<br/>
+> **Note:** `backened` and `frontened` are the existing repository folder names. They are intentionally kept unchanged here so the documentation matches the current repository structure.
 
-## Frontend — React + Vite Dashboard
+---
 
-**Location:** `Frontend McKinsey/vite-project/`
+# 🔌 API Endpoints
 
-<details>
-<summary><b>Frontend folder structure</b></summary>
+The FastAPI backend provides research-related endpoints for interacting with the research pipeline.
 
-```
-src/
-├── App.jsx                     # Route definitions
-├── main.jsx                     # React entry point
-├── context/
-│   ├── AuthContext.jsx           # Supabase session state, login/signup/logout
-│   └── ThemeContext.jsx           # Light/dark theme toggle
-├── components/
-│   ├── ProtectedRoute.jsx          # Redirects unauthenticated users to /login
-│   ├── AuthLayout.jsx               # Shared shell for Login/Signup
-│   ├── Shell.jsx                     # Main app shell (nav, layout) for authenticated pages
-│   ├── StatusBadge.jsx                # Visual pipeline-status indicator
-│   └── Footer.jsx
-├── pages/
-│   ├── Login.jsx / Signup.jsx           # Supabase Auth screens
-│   ├── Dashboard.jsx                      # List of past research jobs + "new research" entry point
-│   ├── ResearchProgress.jsx                 # Animated live view of the 7-stage pipeline running
-│   ├── ReportView.jsx                        # Tabbed final output: Report / Evidence / Sources
-│   ├── Methodology.jsx                        # Explains how the AI pipeline works, for end users
-│   └── AboutProject.jsx                        # Project background page
-├── api/
-│   └── client.js                # Central fetch wrapper — attaches the Supabase bearer token to every request
-└── lib/
-    └── supabaseClient.js         # Supabase JS client singleton (anon key)
-```
+| Endpoint                             | Description                   |
+| ------------------------------------ | ----------------------------- |
+| `GET /`                              | Backend service information   |
+| `GET /health`                        | Health check                  |
+| `POST /research`                     | Start a research pipeline     |
+| `GET /research/{job_id}/tasks`       | Retrieve planner tasks        |
+| `GET /research/{job_id}/sources`     | Retrieve collected sources    |
+| `GET /research/{job_id}/evidence`    | Retrieve extracted evidence   |
+| `GET /research/{job_id}/validations` | Retrieve validation records   |
+| `GET /research/{job_id}/report`      | Retrieve generated report     |
+| `GET /docs`                          | FastAPI Swagger documentation |
 
-</details>
+For detailed API information, see:
 
-### Routing Map
+**[`project-docs/API.md`](./project-docs/API.md)**
 
-| Route | Page | Access |
-|---|---|:---:|
-| `/login` | `Login` | Public |
-| `/signup` | `Signup` | Public |
-| `/` | `Dashboard` | Protected |
-| `/research/new` | `ResearchProgress` | Protected |
-| `/research/:jobId` | `ReportView` | Protected |
-| `/methodology` | `Methodology` | Protected |
-| `/about` | `AboutProject` | Protected |
-| `*` | → redirects to `/` | — |
+---
 
-`ProtectedRoute` wraps every authenticated page and reads session state from `AuthContext`; unauthenticated visitors are always redirected to `/login`.
+# 🚀 Getting Started
 
-### Design System
+## 1. Clone the Repository
 
-The UI follows a navy-and-gold "Meridian" consulting brand intended to evoke a McKinsey-style strategy deliverable: dark navy chrome, gold accent highlights, and clean, data-forward typography.
-
-| Concern | Library |
-|---|---|
-| Styling | Tailwind CSS v4 |
-| Animation | Framer Motion — used heavily on the live `ResearchProgress` screen |
-| Icons | Lucide React, React Icons, FontAwesome |
-
-### Frontend Environment Variables
-
-```env
-# Supabase project settings (Project Settings > API in the Supabase dashboard)
-VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=paste-your-anon-public-key-here   # public/anon key only
-
-# Base URL of the FastAPI backend
-VITE_API_BASE_URL=http://localhost:8000
-```
-
-> The frontend must only ever use the Supabase anon/public key. The service role key belongs exclusively in the backend `.env` and must never ship to the browser.
-
-<br/>
-
-## End-to-End User Flow
-
-```mermaid
-flowchart LR
-    classDef step fill:#DCEBFB,stroke:#185FA5,stroke-width:1.5px,color:#042C53
-    classDef decision fill:#FAEEDA,stroke:#BA7517,stroke-width:1.5px,color:#633806
-    classDef tab fill:#F0EAFB,stroke:#534AB7,stroke-width:1.5px,color:#26215C
-
-    A(["User visits site"]) --> B{"Has account?"}
-    B -- No --> C["Sign up<br/>Supabase Auth"]
-    B -- Yes --> D["Log in"]
-    C --> E["Dashboard"]
-    D --> E
-    E --> F["Submit new brief"]
-    F --> G["Research progress<br/>animates 7 pipeline stages live"]
-    G --> H["Backend runs full AI pipeline"]
-    H --> I["Report view"]
-    I --> J{"Tabs"}
-    J --> K["Report<br/>synthesized findings"]
-    J --> L["Evidence<br/>extracted claims + quotes"]
-    J --> M["Sources<br/>original links + credibility"]
-
-    class A,C,D,E,F,H,I step
-    class B,J decision
-    class K,L,M tab
-```
-
-1. A new user signs up or an existing user logs in through Supabase Auth on the frontend.
-2. Once authenticated, the user lands on the Dashboard, listing any research jobs they've previously run.
-3. Submitting a new brief navigates to `/research/new`, where the Research Progress screen calls `POST /api/research/` and animates the pipeline while the backend works.
-4. The backend runs the entire seven-stage pipeline synchronously, persisting every intermediate artifact to Supabase, and returns the completed job.
-5. The user lands on `/research/:jobId` — the Report View — and moves between Report, Evidence, and Sources tabs, from the final narrative down to the original web source behind any individual claim.
-
-<br/>
-
-## Tech Stack
-
-<div align="center">
-
-| Layer | Technology |
-|---|---|
-| Frontend framework | React 19 + Vite |
-| Frontend styling | Tailwind CSS v4, Framer Motion |
-| Frontend auth | Supabase JS client (`@supabase/supabase-js`) |
-| Routing | React Router v7 |
-| Backend framework | FastAPI (Python) |
-| Backend server | Uvicorn |
-| Config management | Pydantic Settings |
-| Database | Supabase (Postgres) + `pgvector` |
-| Backend auth | Supabase Auth (server-side JWT verification) |
-| LLM provider | Google Gemini (`google-genai`) |
-| Web search provider | Tavily |
-| Deployment (frontend) | Vercel (`vercel.json` present) |
-
-</div>
-
-<br/>
-
-## Getting the Project Running Locally
-
-These are the exact steps to take this codebase from a fresh clone to a fully working local instance.
-
-### Step 1 — Prerequisites
-Install Git, Node.js (v18+), and Python (3.11+).
-
-### Step 2 — Set Up Supabase
-1. Create a new project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run each file in `backend/db/migrations/` in numeric order (`001` → `009`) to build the full schema, including the `pgvector` extension and indexes.
-3. From Project Settings → API, copy:
-   - The Project URL
-   - The anon/public key (for the frontend)
-   - The service_role key (for the backend only)
-
-### Step 3 — Backend Setup
 ```bash
-cd "Backend McKinsey/mckinsey-research-engine"
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-pip install -r backend/requirements.txt
-
-cp .env.example .env
-# then fill in: GOOGLE_API_KEY, TAVILY_API_KEY, SUPABASE_URL, SUPABASE_KEY (service role)
-
-uvicorn backend.main:app --reload --port 8000
+git clone https://github.com/adityatygi/Meridian---AI-Market-Research-Strategy-Engine.git
+cd Meridian---AI-Market-Research-Strategy-Engine
 ```
-The API will be live at `http://localhost:8000`, with interactive docs at `http://localhost:8000/docs`.
 
-### Step 4 — Frontend Setup
+---
+
+## 2. Backend Setup
+
+Move into the backend project directory:
+
 ```bash
-cd "Frontend McKinsey/vite-project"
+cd backened
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Install the required Python packages according to the backend requirements.
+
+Configure the environment variables described below.
+
+---
+
+## 3. Run the Backend
+
+From the backend project directory:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+The API will normally be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## 4. Frontend Setup
+
+Open a new terminal and move to the frontend directory:
+
+```bash
+cd frontened
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
 
-cp .env.example .env
-# then fill in: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_BASE_URL=http://localhost:8000
+Start the development server:
 
+```bash
 npm run dev
 ```
-The app will be live at `http://localhost:5173`.
 
-### Step 5 — Verify
-1. Open the frontend, sign up for a new account.
-2. Submit a test research brief and confirm the progress screen animates through the pipeline stages.
-3. Confirm the completed job produces a report with populated Report, Evidence, and Sources tabs.
+The frontend will normally be available through the Vite development server.
 
-### Step 6 — Deploy to Production
-- **Frontend** — deploy via Vercel using the included `vercel.json`; set the three `VITE_*` environment variables, pointing `VITE_API_BASE_URL` at the deployed backend URL.
-- **Backend** — deploy the FastAPI app to your platform of choice (Render, Railway, Fly.io); set `SUPABASE_URL`, `SUPABASE_KEY` (service role), `GOOGLE_API_KEY`, `TAVILY_API_KEY`, and `CORS_ORIGINS` (comma-separated list including the deployed frontend domain).
+---
 
-<br/>
+# 🔐 Environment Variables
 
-## Security Notes
+Create a local `.env` file for the required credentials.
 
-| Safeguard | Description |
-|---|---|
-| **Two-tier Supabase keys** | The anon/public key (safe for the browser) is used by the frontend for auth only; the service-role key (full database access) is confined to the backend and never exposed client-side. |
-| **Server-verified sessions** | The backend never trusts client-supplied identity — every bearer token is independently verified against Supabase on every call. |
-| **Per-user data isolation** | Job ownership is enforced at the API layer (`_ensure_owner`), so users can only ever read their own jobs, tasks, sources, evidence, validations, and reports. |
-| **Restricted CORS** | `CORS_ORIGINS` explicitly allowlists origins rather than leaving the API open, so only approved frontend domains may call it. |
+Example:
 
-<br/>
+```env
+GOOGLE_API_KEY=your_gemini_api_key
+TAVILY_API_KEY=your_tavily_api_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+```
 
-## Project Status
+### Important
 
-<div align="center">
+**Never commit your real `.env` file or API keys to GitHub.**
 
-**This repository represents the final, deployed state of the Meridian AI Market Research & Strategy Engine**, a working, end-to-end multi-agent research application spanning authentication, a seven-stage AI pipeline, full evidence traceability, and a polished consulting-styled UI.
+The repository contains `.env.example` as a template for required environment variables.
 
-<br/>
+---
 
-<img src="https://img.shields.io/badge/pipeline-7%20agents-534AB7?style=for-the-badge&labelColor=1a1a1a" />
-<img src="https://img.shields.io/badge/auth-Supabase%20JWT-3ecf8e?style=for-the-badge&labelColor=1a1a1a" />
-<img src="https://img.shields.io/badge/traceability-source--linked-0F6E56?style=for-the-badge&labelColor=1a1a1a" />
+# 📝 Sample Research Query
 
-</div>
+Example:
+
+```text
+Impact of Generative AI on the education industry in India.
+```
+
+### Expected Research Output
+
+The pipeline can produce:
+
+* Research Tasks
+* Web Sources
+* Extracted Evidence
+* Validation Results
+* Citations
+* Structured Report
+* Evidence-linked Findings
+* Strategic Recommendations
+
+---
+
+# 🖼️ Screenshots
+
+The project screenshots are available in the [`meridian-Screenshots`](./meridian-Screenshots/) folder.
+
+## Account Creation
+
+![Create Account](./meridian-Screenshots/Create_account_page.png)
+
+## Sign In
+
+![Sign In](./meridian-Screenshots/sign-in_page.png)
+
+## Dashboard
+
+![Dashboard](./meridian-Screenshots/Dashboard%20%282%29.png)
+
+## Research Query
+
+![Query Input](./meridian-Screenshots/Query_input.png)
+
+## Research Progress
+
+![Loading 25%](./meridian-Screenshots/Loading%2825%25%29.png)
+
+![Loading 75%](./meridian-Screenshots/loading%2875%25%29.png)
+
+![Loading 100%](./meridian-Screenshots/Laded%28100%25%29.png)
+
+## Sources
+
+![Sources](./meridian-Screenshots/Sources.png)
+
+## Evidence
+
+![Evidence](./meridian-Screenshots/Evidence.png)
+
+## Report
+
+![Report](./meridian-Screenshots/Report_view.png)
+
+## Citations
+
+![Citations](./meridian-Screenshots/citations.png)
+
+---
+
+# 📚 Documentation
+
+Detailed project documentation is available in the `project-docs` directory.
+
+### Architecture
+
+[`ARCHITECTURE.md`](./project-docs/ARCHITECTURE.md)
+
+Contains the system architecture, AI-agent workflow, backend structure, database integration, and traceability design.
+
+### API Documentation
+
+[`API.md`](./project-docs/API.md)
+
+Contains API endpoints, request/response information, and backend service details.
+
+### Deployment
+
+[`DEPLOYMENT.md`](./project-docs/DEPLOYMENT.md)
+
+Contains frontend, backend, database, and environment configuration information.
+
+### Evaluation
+
+[`EVALUATION.md`](./project-docs/EVALUATION.md)
+
+Contains evaluation criteria, reliability considerations, limitations, and future improvements.
+
+---
+
+# 🛡️ Reliability and Error Handling
+
+The research pipeline includes mechanisms intended to improve reliability during AI processing and external API usage.
+
+### Retry Handling
+
+Temporary AI or external service failures can be handled through retry mechanisms.
+
+### Validation
+
+Extracted evidence passes through a validation stage before being used in the final report.
+
+### Traceability
+
+The Report Linker maintains connections between final findings, evidence, and citations.
+
+### External Dependency Handling
+
+The system depends on external services such as:
+
+* Gemini
+* Tavily
+* Supabase
+
+Temporary service availability or quota issues can therefore affect execution.
+
+---
+
+# 🧪 Evaluation
+
+Meridian is evaluated based on its ability to transform a research query into a structured and evidence-backed report.
+
+### Evaluation Areas
+
+**Research Quality**
+
+Relevant information should be collected from appropriate sources.
+
+**Evidence Quality**
+
+Extracted evidence should be relevant and validated.
+
+**Report Quality**
+
+The final report should be structured, readable, and useful.
+
+**Citation Traceability**
+
+Findings should be connected to supporting evidence and sources.
+
+**System Integration**
+
+Frontend, backend, AI pipeline, and database components should work together.
+
+---
+
+# ⚠️ Known Limitations
+
+* Research quality depends on the availability and quality of web sources.
+* AI-generated content may require human review.
+* External API availability can affect execution time.
+* Search results may change over time.
+* Large research topics may require additional processing time.
+* Gemini and Tavily usage can be affected by API limits or temporary service availability.
+
+---
+
+# 🔮 Future Improvements
+
+Potential future improvements include:
+
+* Advanced source credibility scoring
+* Improved long-term memory
+* RAG-based knowledge retrieval
+* More advanced research planning
+* Multi-model AI routing
+* Streaming report generation
+* PDF and DOCX report export
+* Enhanced monitoring and analytics
+* Further frontend and UX improvements
+* Production performance optimization
+
+---
+
+# ☁️ Deployment
+
+Meridian uses a separated deployment architecture.
+
+| Component  | Platform      |
+| ---------- | ------------- |
+| Frontend   | Vercel        |
+| Backend    | Render        |
+| Database   | Supabase      |
+| AI Model   | Google Gemini |
+| Web Search | Tavily        |
+
+For deployment instructions, see:
+
+**[`project-docs/DEPLOYMENT.md`](./project-docs/DEPLOYMENT.md)**
+
+---
+
+# 🌟 Project Highlights
+
+* End-to-end Applied GenAI project
+* Multi-agent AI architecture
+* Automated market research workflow
+* Evidence-backed report generation
+* Source and citation traceability
+* FastAPI backend
+* React/Vite frontend
+* Supabase PostgreSQL integration
+* Gemini-powered AI processing
+* Tavily-powered web research
+* Validation and reliability mechanisms
+* Structured project documentation
+
+---
+
+# 📌 Conclusion
+
+Meridian demonstrates how a multi-agent AI architecture can automate the complete market research workflow — from a natural-language research query to a structured, evidence-backed report.
+
+The combination of **AI agents, live web research, evidence validation, citation building, report generation, and report linking** provides a traceable research workflow designed for practical market research and strategy use cases.
+
+---
+
+### Built with
+
+**React • Vite • FastAPI • Python • Google Gemini • Tavily • Supabase • PostgreSQL**
+
+**Meridian — AI Market Research & Strategy Engine**
