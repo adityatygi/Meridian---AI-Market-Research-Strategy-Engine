@@ -1,292 +1,303 @@
-# Meridian - AI Market Research & Strategy Engine
+<div align="center">
 
-### An autonomous multi-agent AI system that transforms a research query into a structured, evidence-backed, and fully cited market research report.
+# 🚀 Meridian — AI Market Research & Strategy Engine
 
-> Meridian automates the market research workflow by planning research tasks, searching the web, extracting and validating evidence, generating a structured report, and linking report findings back to their supporting sources.
+### Transforming research briefs into evidence-backed, citation-ready strategic insights.
 
----
+<br/>
 
-## 📌 Table of Contents
+<img src="https://skillicons.dev/icons?i=react,vite,tailwind,fastapi,python,supabase,postgres,vercel&theme=dark" />
 
-* [Project Overview](#-project-overview)
-* [Business Problem](#-business-problem)
-* [Project Goal](#-project-goal)
-* [Key Features](#-key-features)
-* [System Architecture](#-system-architecture)
-* [Multi-Agent Research Pipeline](#-multi-agent-research-pipeline)
-* [Backend](#-backend)
-* [Frontend](#-frontend)
-* [Database](#-database)
-* [Technology Stack](#-technology-stack)
-* [Project Structure](#-project-structure)
-* [API Endpoints](#-api-endpoints)
-* [Getting Started](#-getting-started)
-* [Environment Variables](#-environment-variables)
-* [Sample Research Query](#-sample-research-query)
-* [Screenshots](#-screenshots)
-* [Documentation](#-documentation)
-* [Reliability and Error Handling](#-reliability-and-error-handling)
-* [Evaluation](#-evaluation)
-* [Known Limitations](#-known-limitations)
-* [Future Improvements](#-future-improvements)
-* [Deployment](#-deployment)
-* [Project Highlights](#-project-highlights)
+<br/><br/>
+
+<img src="https://img.shields.io/badge/status-deployed-2e7d32?style=for-the-badge&labelColor=1a1a1a" />
+<img src="https://img.shields.io/badge/frontend-React_19_%2B_Vite-646cff?style=for-the-badge&labelColor=1a1a1a" />
+<img src="https://img.shields.io/badge/backend-FastAPI-009688?style=for-the-badge&labelColor=1a1a1a" />
+<img src="https://img.shields.io/badge/database-Supabase-3ecf8e?style=for-the-badge&labelColor=1a1a1a" />
+<img src="https://img.shields.io/badge/LLM-Gemini-4285f4?style=for-the-badge&labelColor=1a1a1a" />
+<img src="https://img.shields.io/badge/search-Tavily-f97316?style=for-the-badge&labelColor=1a1a1a" />
+
+<br/><br/>
+
+**Research • Evidence • Validation • Strategy • Traceability**
+
+</div>
 
 ---
 
-# 🔎 Project Overview
+## 🧠 What is Meridian?
 
-Meridian is an AI-powered market research and strategy engine designed to automate the workflow normally performed by market researchers, business analysts, strategy teams, and consultants.
+**Meridian** is a multi-agent AI market research and strategy engine that automates the journey from a research question to a structured, evidence-backed report.
 
-Instead of manually searching multiple websites, collecting information, validating evidence, preparing citations, and writing a report, Meridian uses a **multi-agent AI pipeline** to perform these stages systematically.
+Instead of manually searching the web, collecting information, validating findings, organizing sources, and writing a report, Meridian coordinates specialized AI agents to perform these tasks as a connected workflow.
 
-A user provides a natural-language research query, and Meridian processes it through specialized AI agents to produce a structured research result with supporting evidence and source traceability.
+### The core idea
 
-### Example
+```text
+Research Question
+       ↓
+Plan
+       ↓
+Search
+       ↓
+Extract Evidence
+       ↓
+Validate
+       ↓
+Build Citations
+       ↓
+Generate Report
+       ↓
+Link Findings to Evidence
+       ↓
+Evidence-Backed Research Report
+```
 
-A user can submit a query such as:
-
-> **"Analyze the impact of Generative AI on the education industry in India."**
-
-The system then:
-
-1. Creates a research plan.
-2. Searches relevant web sources.
-3. Extracts useful evidence.
-4. Validates the evidence.
-5. Builds citations.
-6. Generates a structured report.
-7. Links report findings to supporting evidence and sources.
-
----
-
-# 💼 Business Problem
-
-Traditional market research can require significant manual effort.
-
-Researchers commonly need to:
-
-* Search multiple websites.
-* Identify relevant sources.
-* Extract useful information.
-* Verify evidence.
-* Check source credibility and relevance.
-* Organize findings.
-* Prepare citations.
-* Convert research into a structured report.
-
-Meridian automates this workflow through a coordinated AI-agent architecture.
-
-### Target Users
-
-* Strategy Consultants
-* Business Analysts
-* Market Researchers
-* Product Managers
-* Startup Founders
-* Students and Researchers
+> **Every stage contributes to making the final research output more structured, reliable, and traceable.**
 
 ---
 
-# 🎯 Project Goal
+# 🎯 Why Meridian?
 
-The goal of Meridian is to build a production-style AI research assistant that can transform a single research query into a **structured, evidence-backed, and traceable market research report**.
+Market research often involves repetitive manual work:
 
-The system focuses on:
+* Finding relevant information across multiple sources
+* Identifying useful evidence
+* Checking whether findings are relevant
+* Organizing research into meaningful sections
+* Preparing citations
+* Connecting conclusions back to supporting information
 
-* Research automation
-* Evidence quality
-* Source traceability
-* Structured reporting
-* Multi-agent orchestration
-* Backend and database integration
+Meridian brings these activities together into an **automated multi-agent workflow**.
+
+### Designed for
+
+| User                  | Use Case                                 |
+| --------------------- | ---------------------------------------- |
+| 📊 Business Analysts  | Faster research and analysis             |
+| 💼 Strategy Teams     | Evidence-backed strategic insights       |
+| 🔎 Market Researchers | Automated source and evidence collection |
+| 🚀 Product Teams      | Research-driven decision making          |
+| 🧑‍💻 Researchers     | Structured information discovery         |
+| 🎓 Students           | AI-assisted research workflows           |
 
 ---
 
 # ✨ Key Features
 
-* 🤖 Multi-agent AI research workflow
-* 🧠 Automated research planning
-* 🌐 Live web research using Tavily
-* 📑 Evidence extraction from sources
-* ✅ Evidence validation
-* 🔗 Citation and source linking
-* 📊 Structured strategy report generation
-* 🔍 Evidence-to-report traceability
-* 🔐 Supabase authentication
-* ⚡ FastAPI backend
-* 💻 React/Vite frontend
-* 🗄️ Supabase PostgreSQL database
-* 🧠 Google Gemini for AI processing
-* 🛡️ Error handling and retry mechanisms
+### 🤖 Multi-Agent Research
+
+Seven specialized agents work together, with each agent responsible for a specific stage.
+
+### 🌐 Live Web Research
+
+Tavily enables the system to retrieve current information from web sources.
+
+### 📑 Evidence Extraction
+
+Relevant claims and supporting information are extracted from collected sources.
+
+### ✅ Evidence Validation
+
+Extracted evidence is evaluated before being used in the final report.
+
+### 🔗 Citation Traceability
+
+Findings can be connected back to supporting evidence and original sources.
+
+### 📊 Structured Reports
+
+The Report Agent transforms validated research into a readable strategic report.
+
+### 🔐 Authentication
+
+Supabase Auth provides user authentication and protected access.
+
+### ⚡ API-Driven Architecture
+
+FastAPI provides the backend API layer connecting the frontend, AI pipeline, and database.
 
 ---
 
 # 🏗️ System Architecture
 
-Meridian follows a multi-agent architecture where each agent is responsible for a specific stage of the research workflow.
-
 ```text
-                         USER
-                           │
-                           ▼
-                    Research Query
-                           │
-                           ▼
-                    Planner Agent
-                           │
-                           ▼
-                    Research Agent
-                           │
-                           ▼
-                 Evidence Extraction
-                           │
-                           ▼
-                  Validation Agent
-                           │
-                           ▼
-                  Citation Builder
-                           │
-                           ▼
-                     Report Agent
-                           │
-                           ▼
-                   Report Linker
-                           │
-                           ▼
-              Final Research Report
-                           │
-                           ▼
-                    Supabase DB
+                         ┌──────────────────┐
+                         │       USER       │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ Research Query   │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │  Planner Agent   │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ Research Agent  │
+                         │   + Tavily      │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ Extraction Agent │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ Validation Agent │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ Citation Builder │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │   Report Agent   │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │  Report Linker   │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                    ┌──────────────────────────┐
+                    │ Evidence-Backed Report  │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                       ┌──────────────────┐
+                       │ Supabase / DB    │
+                       └──────────────────┘
 ```
 
-### Main Components
-
-| Component        | Responsibility                                       |
-| ---------------- | ---------------------------------------------------- |
-| React Frontend   | User interface and research dashboard                |
-| FastAPI Backend  | API layer and orchestration                          |
-| Planner Agent    | Creates structured research tasks                    |
-| Research Agent   | Searches relevant web sources                        |
-| Extraction Agent | Extracts useful evidence                             |
-| Validation Agent | Validates extracted evidence                         |
-| Citation Builder | Creates citation information                         |
-| Report Agent     | Generates the final structured report                |
-| Report Linker    | Connects report findings with evidence and citations |
-| Supabase         | Stores application and research data                 |
-| Gemini           | AI reasoning and generation                          |
-| Tavily           | Web search                                           |
-
 ---
 
-# 🤖 Multi-Agent Research Pipeline
+# 🤖 The Seven-Agent Pipeline
 
-## 1. Planner Agent
+Meridian uses specialized agents rather than relying on a single AI call.
 
-The Planner Agent converts the user's research query into smaller, structured research tasks.
+## 1️⃣ Planner Agent
 
-### Input
+The Planner converts a broad research query into smaller, actionable research tasks.
 
-Natural-language research query.
+**Input:** Research query
 
-### Output
+**Output:**
 
-* Research tasks
-* Objectives
-* Dependencies
+* Research objectives
+* Subtasks
 * Search requirements
+* Task structure
 
 ---
 
-## 2. Research Agent
+## 2️⃣ Research Agent
 
-The Research Agent searches the web for relevant information using the **Tavily Search API**.
+The Research Agent performs web research using **Tavily**.
 
-It collects information such as:
+It identifies and collects relevant sources that can support the research tasks.
 
-* Source URL
+**Collected information can include:**
+
 * Source title
+* URL
 * Publisher
-* Search metadata
 * Relevant content
-
-The purpose of this stage is to provide reliable source material for downstream agents.
-
----
-
-## 3. Evidence Extraction Agent
-
-The Extraction Agent processes the retrieved sources and identifies useful factual information.
-
-It extracts relevant claims and supporting information using Gemini.
-
-### Example output
-
-* Claim
-* Supporting excerpt
-* Entity
-* Topic
-* Relevance information
+* Search metadata
 
 ---
 
-## 4. Validation Agent
+## 3️⃣ Extraction Agent
 
-The Validation Agent evaluates extracted evidence before it is used in the final report.
+The Extraction Agent analyzes retrieved sources and extracts useful evidence.
 
-It checks factors such as:
+It focuses on identifying:
 
-* Claim validity
+* Relevant claims
+* Supporting information
+* Important entities
+* Research context
+
+This converts raw web information into structured evidence that downstream agents can use.
+
+---
+
+## 4️⃣ Validation Agent
+
+The Validation Agent evaluates extracted evidence before it reaches the reporting stage.
+
+It considers factors such as:
+
 * Relevance
-* Source credibility
+* Claim validity
+* Source quality
 * Recency
 * Duplicate information
 * Conflicting information
 
-This stage helps improve the reliability of the research output.
+This additional validation stage helps improve research reliability.
 
 ---
 
-## 5. Citation Builder
+## 5️⃣ Citation Builder
 
-The Citation Builder prepares citation information for validated sources.
+The Citation Builder prepares citation information for validated research.
 
-This allows the final report to maintain a connection between findings and their supporting sources.
+It helps preserve the relationship between:
+
+```text
+Finding → Evidence → Source → Citation
+```
+
+This relationship is important for research traceability.
 
 ---
 
-## 6. Report Agent
+## 6️⃣ Report Agent
 
-The Report Agent takes the validated research evidence and generates the structured research report.
+The Report Agent transforms validated evidence into a structured research report.
 
-The report can contain sections such as:
+The generated report can contain sections such as:
 
 * Executive Summary
 * Key Findings
-* Market Signals
+* Market Insights
 * Competitive Observations
 * Strategic Implications
 * Recommendations
-* Evidence / Source Information
+* Supporting Evidence
 
-The Report Agent focuses on converting validated research into a readable and structured report.
+The focus of this agent is **report generation and organization**.
 
 ---
 
-## 7. Report Linker
+## 7️⃣ Report Linker
 
-The Report Linker is the final traceability stage.
+The Report Linker provides the final layer of **traceability**.
 
-It connects report findings with their corresponding:
+It connects report findings with the evidence and sources that support them.
 
-* Evidence
-* Evidence IDs
-* Sources
-* Citations
+```text
+Report Finding
+      ↓
+Evidence
+      ↓
+Source
+      ↓
+Citation
+```
 
-This makes it possible to trace a final finding back to the research evidence supporting it.
+This allows a reader to understand **where a particular finding came from**.
 
-### Final Pipeline
+### Final Agent Flow
 
 ```text
 Planner
@@ -302,44 +313,31 @@ Citation Builder
 Report Agent
    ↓
 Report Linker
-   ↓
-Final Evidence-Backed Report
 ```
 
 ---
 
-# ⚙️ Backend
+# ⚙️ Backend Architecture
 
-The backend is built using **FastAPI and Python**.
+Meridian uses **FastAPI** as the backend API framework.
 
-It provides APIs for:
-
-* Creating research jobs
-* Running the research workflow
-* Retrieving research tasks
-* Retrieving sources
-* Retrieving evidence
-* Retrieving validation results
-* Retrieving generated reports
-
-The backend also connects the AI pipeline with the database layer.
-
-### Backend Layers
+The backend follows a layered structure:
 
 ```text
-API Layer
-    ↓
-Service Layer
-    ↓
-AI Research Pipeline
-    ↓
-Repository Layer
-    ↓
-Supabase PostgreSQL
+             API Layer
+                 ↓
+          Service Layer
+                 ↓
+       AI Research Pipeline
+                 ↓
+        Repository Layer
+                 ↓
+       Supabase PostgreSQL
 ```
 
-### Main Repository Components
+### Main Backend Components
 
+* `ResearchService`
 * `ResearchJobRepository`
 * `PlannerTaskRepository`
 * `SourceRepository`
@@ -347,88 +345,77 @@ Supabase PostgreSQL
 * `ValidationRepository`
 * `ReportRepository`
 
+This separation keeps API handling, business logic, AI processing, and database operations organized.
+
 ---
 
 # 💻 Frontend
 
-The frontend provides the user interface for interacting with Meridian.
+The frontend provides the interface through which users interact with Meridian.
 
-It allows users to:
+### Main capabilities
 
-* Sign in / create an account
-* Enter research queries
-* Start research
-* Monitor research progress
-* View sources
-* View evidence
-* View validation results
-* Read generated reports
-* Explore citations and linked evidence
+* User registration
+* Sign in
+* Research query input
+* Research progress
+* Source viewing
+* Evidence viewing
+* Validation information
+* Report viewing
+* Citation exploration
+* Previous research access
 
-The frontend is built using **React and Vite**.
+### Frontend Stack
+
+* React 19
+* Vite
+* Tailwind CSS
+* React Router
+* Supabase Client
 
 ---
 
-# 🗄️ Database
+# 🗄️ Data Layer
 
-Meridian uses **Supabase PostgreSQL** for persistent data storage.
+Meridian uses **Supabase PostgreSQL** for persistent storage.
 
-Important data areas include:
+### Core data areas
 
-| Table / Data Area    | Purpose                                   |
-| -------------------- | ----------------------------------------- |
-| `research_jobs`      | Stores research requests                  |
-| `planner_tasks`      | Stores generated research tasks           |
-| `sources`            | Stores retrieved sources                  |
-| `evidence`           | Stores extracted evidence                 |
-| `validation_records` | Stores evidence validation                |
-| `reports`            | Stores generated reports                  |
-| `feedback`           | Stores user feedback                      |
-| `memory_records`     | Foundation for future memory capabilities |
+| Data               | Purpose                                   |
+| ------------------ | ----------------------------------------- |
+| Research Jobs      | Stores research requests                  |
+| Planner Tasks      | Stores generated research tasks           |
+| Sources            | Stores collected sources                  |
+| Evidence           | Stores extracted evidence                 |
+| Validation Records | Stores validation results                 |
+| Reports            | Stores generated reports                  |
+| Feedback           | Stores user feedback                      |
+| Memory Records     | Foundation for future memory capabilities |
 
-The database allows the research workflow to maintain state and preserve traceability between different pipeline stages.
+The database helps maintain state throughout the research workflow and supports evidence traceability.
 
 ---
 
 # 🛠️ Technology Stack
 
-## Frontend
+<div align="center">
 
-* React
-* Vite
-* JavaScript
-* CSS
-* React Router
-* Supabase Client
+| Layer              | Technology                   |
+| ------------------ | ---------------------------- |
+| **Frontend**       | React 19, Vite, Tailwind CSS |
+| **Backend**        | Python, FastAPI, Uvicorn     |
+| **AI / LLM**       | Google Gemini                |
+| **Web Search**     | Tavily                       |
+| **Database**       | Supabase PostgreSQL          |
+| **Authentication** | Supabase Auth                |
+| **Deployment**     | Vercel + Render              |
 
-## Backend
-
-* Python
-* FastAPI
-* Uvicorn
-* Pydantic
-* Python-dotenv
-
-## AI & Search
-
-* Google Gemini API
-* Tavily Search API
-
-## Database
-
-* Supabase
-* PostgreSQL
-
-## Deployment
-
-* Vercel
-* Render
+</div>
 
 ---
 
 # 📁 Project Structure
-
-The repository is organized as follows:
 
 ```text
 Meridian---AI-Market-Research-Strategy-Engine/
@@ -471,33 +458,47 @@ Meridian---AI-Market-Research-Strategy-Engine/
 └── README.md
 ```
 
-> **Note:** `backened` and `frontened` are the existing repository folder names. They are intentionally kept unchanged here so the documentation matches the current repository structure.
+> **Note:** `backened` and `frontened` are the existing folder names in this repository and are intentionally retained so the documentation matches the current project structure.
 
 ---
 
-# 🔌 API Endpoints
+# 🔌 API
 
-The FastAPI backend provides research-related endpoints for interacting with the research pipeline.
+The backend exposes endpoints for interacting with the research pipeline.
 
-| Endpoint                             | Description                   |
-| ------------------------------------ | ----------------------------- |
-| `GET /`                              | Backend service information   |
-| `GET /health`                        | Health check                  |
-| `POST /research`                     | Start a research pipeline     |
-| `GET /research/{job_id}/tasks`       | Retrieve planner tasks        |
-| `GET /research/{job_id}/sources`     | Retrieve collected sources    |
-| `GET /research/{job_id}/evidence`    | Retrieve extracted evidence   |
-| `GET /research/{job_id}/validations` | Retrieve validation records   |
-| `GET /research/{job_id}/report`      | Retrieve generated report     |
-| `GET /docs`                          | FastAPI Swagger documentation |
+| Endpoint                             | Purpose                     |
+| ------------------------------------ | --------------------------- |
+| `GET /`                              | Backend information         |
+| `GET /health`                        | Health check                |
+| `POST /research`                     | Start a research pipeline   |
+| `GET /research/{job_id}/tasks`       | Retrieve research tasks     |
+| `GET /research/{job_id}/sources`     | Retrieve sources            |
+| `GET /research/{job_id}/evidence`    | Retrieve evidence           |
+| `GET /research/{job_id}/validations` | Retrieve validation records |
+| `GET /research/{job_id}/report`      | Retrieve generated report   |
+| `GET /docs`                          | FastAPI Swagger UI          |
 
-For detailed API information, see:
+Detailed API documentation:
 
 **[`project-docs/API.md`](./project-docs/API.md)**
 
 ---
 
 # 🚀 Getting Started
+
+## Prerequisites
+
+Make sure you have:
+
+* Python 3.10+
+* Node.js
+* npm
+* Git
+* Gemini API key
+* Tavily API key
+* Supabase project
+
+---
 
 ## 1. Clone the Repository
 
@@ -509,8 +510,6 @@ cd Meridian---AI-Market-Research-Strategy-Engine
 ---
 
 ## 2. Backend Setup
-
-Move into the backend project directory:
 
 ```bash
 cd backened
@@ -528,27 +527,25 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-Install the required Python packages according to the backend requirements.
+Install the required dependencies.
 
-Configure the environment variables described below.
+Create/configure the `.env` file using the variables shown below.
 
 ---
 
-## 3. Run the Backend
-
-From the backend project directory:
+## 3. Start the Backend
 
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-The API will normally be available at:
+Backend:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Swagger API documentation:
+Swagger:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -556,9 +553,9 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## 4. Frontend Setup
+## 4. Start the Frontend
 
-Open a new terminal and move to the frontend directory:
+Open another terminal:
 
 ```bash
 cd frontened
@@ -576,15 +573,11 @@ Start the development server:
 npm run dev
 ```
 
-The frontend will normally be available through the Vite development server.
-
 ---
 
-# 🔐 Environment Variables
+# 🔐 Environment Configuration
 
-Create a local `.env` file for the required credentials.
-
-Example:
+The backend requires environment variables for external services.
 
 ```env
 GOOGLE_API_KEY=your_gemini_api_key
@@ -593,58 +586,74 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
 ```
 
-### Important
+### 🔒 Security
 
-**Never commit your real `.env` file or API keys to GitHub.**
+Never commit real API keys or secrets to GitHub.
 
-The repository contains `.env.example` as a template for required environment variables.
+Use `.env.example` as a template and keep the actual `.env` file private.
 
 ---
 
-# 📝 Sample Research Query
-
-Example:
+# 📝 Example Research Query
 
 ```text
-Impact of Generative AI on the education industry in India.
+Analyze the impact of Generative AI on the education industry in India.
 ```
 
-### Expected Research Output
+### Processing flow
 
-The pipeline can produce:
+```text
+Query
+ ↓
+Research Planning
+ ↓
+Web Search
+ ↓
+Evidence Extraction
+ ↓
+Evidence Validation
+ ↓
+Citation Building
+ ↓
+Report Generation
+ ↓
+Report Linking
+```
 
-* Research Tasks
-* Web Sources
-* Extracted Evidence
-* Validation Results
+### Output
+
+The system can produce:
+
+* Structured research tasks
+* Relevant web sources
+* Extracted evidence
+* Validation results
 * Citations
-* Structured Report
-* Evidence-linked Findings
-* Strategic Recommendations
+* Strategic findings
+* Recommendations
+* Evidence-linked report
 
 ---
 
-# 🖼️ Screenshots
+# 🖼️ Product Screenshots
 
-The project screenshots are available in the [`meridian-Screenshots`](./meridian-Screenshots/) folder.
+Screenshots are available in the [`meridian-Screenshots`](./meridian-Screenshots/) directory.
 
-## Account Creation
+### 🔐 Authentication
 
 ![Create Account](./meridian-Screenshots/Create_account_page.png)
 
-## Sign In
-
 ![Sign In](./meridian-Screenshots/sign-in_page.png)
 
-## Dashboard
+### 📊 Dashboard
 
 ![Dashboard](./meridian-Screenshots/Dashboard%20%282%29.png)
 
-## Research Query
+### 🔎 Research Query
 
 ![Query Input](./meridian-Screenshots/Query_input.png)
 
-## Research Progress
+### ⏳ Research Progress
 
 ![Loading 25%](./meridian-Screenshots/Loading%2825%25%29.png)
 
@@ -652,19 +661,25 @@ The project screenshots are available in the [`meridian-Screenshots`](./meridian
 
 ![Loading 100%](./meridian-Screenshots/Laded%28100%25%29.png)
 
-## Sources
+### 🌐 Sources
 
 ![Sources](./meridian-Screenshots/Sources.png)
 
-## Evidence
+### 📑 Evidence
 
 ![Evidence](./meridian-Screenshots/Evidence.png)
 
-## Report
+![Evidence Details](./meridian-Screenshots/Evidences.png)
+
+### 📄 Generated Report
 
 ![Report](./meridian-Screenshots/Report_view.png)
 
-## Citations
+![Report Section](./meridian-Screenshots/Part_of_report.png)
+
+![Report Section](./meridian-Screenshots/Part_of_report%20%282%29.png)
+
+### 🔗 Citations
 
 ![Citations](./meridian-Screenshots/citations.png)
 
@@ -672,163 +687,150 @@ The project screenshots are available in the [`meridian-Screenshots`](./meridian
 
 # 📚 Documentation
 
-Detailed project documentation is available in the `project-docs` directory.
+Additional documentation is available under `project-docs/`.
 
-### Architecture
-
-[`ARCHITECTURE.md`](./project-docs/ARCHITECTURE.md)
-
-Contains the system architecture, AI-agent workflow, backend structure, database integration, and traceability design.
-
-### API Documentation
-
-[`API.md`](./project-docs/API.md)
-
-Contains API endpoints, request/response information, and backend service details.
-
-### Deployment
-
-[`DEPLOYMENT.md`](./project-docs/DEPLOYMENT.md)
-
-Contains frontend, backend, database, and environment configuration information.
-
-### Evaluation
-
-[`EVALUATION.md`](./project-docs/EVALUATION.md)
-
-Contains evaluation criteria, reliability considerations, limitations, and future improvements.
+| Document                                            | Description                              |
+| --------------------------------------------------- | ---------------------------------------- |
+| [`API.md`](./project-docs/API.md)                   | API endpoints and backend services       |
+| [`ARCHITECTURE.md`](./project-docs/ARCHITECTURE.md) | System architecture and agent workflow   |
+| [`DEPLOYMENT.md`](./project-docs/DEPLOYMENT.md)     | Deployment configuration                 |
+| [`EVALUATION.md`](./project-docs/EVALUATION.md)     | Evaluation, limitations and improvements |
 
 ---
 
-# 🛡️ Reliability and Error Handling
+# 🛡️ Reliability
 
-The research pipeline includes mechanisms intended to improve reliability during AI processing and external API usage.
+Meridian includes multiple stages intended to improve research reliability.
 
-### Retry Handling
+### Evidence Validation
 
-Temporary AI or external service failures can be handled through retry mechanisms.
+Evidence is evaluated before being used in the final report.
 
-### Validation
+### Source Traceability
 
-Extracted evidence passes through a validation stage before being used in the final report.
+The research workflow preserves connections between findings, evidence, and sources.
 
-### Traceability
+### Structured Processing
 
-The Report Linker maintains connections between final findings, evidence, and citations.
+Each research stage has a defined responsibility, reducing the dependency on a single AI generation step.
 
-### External Dependency Handling
+### External Service Handling
 
-The system depends on external services such as:
-
-* Gemini
-* Tavily
-* Supabase
-
-Temporary service availability or quota issues can therefore affect execution.
+The system depends on external services including Gemini, Tavily, and Supabase. Temporary service issues or API limits may affect execution.
 
 ---
 
-# 🧪 Evaluation
+# 📊 Evaluation Criteria
 
-Meridian is evaluated based on its ability to transform a research query into a structured and evidence-backed report.
+Meridian can be evaluated across five primary areas:
 
-### Evaluation Areas
+### 1. Research Quality
 
-**Research Quality**
+Does the system discover relevant information and sources?
 
-Relevant information should be collected from appropriate sources.
+### 2. Evidence Quality
 
-**Evidence Quality**
+Is the extracted evidence relevant and sufficiently validated?
 
-Extracted evidence should be relevant and validated.
+### 3. Report Quality
 
-**Report Quality**
+Is the final report structured, readable, and useful?
 
-The final report should be structured, readable, and useful.
+### 4. Citation Traceability
 
-**Citation Traceability**
+Can report findings be connected to supporting evidence and sources?
 
-Findings should be connected to supporting evidence and sources.
+### 5. System Integration
 
-**System Integration**
-
-Frontend, backend, AI pipeline, and database components should work together.
+Do the frontend, backend, AI pipeline, and database work together as a complete system?
 
 ---
 
 # ⚠️ Known Limitations
 
-* Research quality depends on the availability and quality of web sources.
-* AI-generated content may require human review.
-* External API availability can affect execution time.
-* Search results may change over time.
-* Large research topics may require additional processing time.
-* Gemini and Tavily usage can be affected by API limits or temporary service availability.
+* Research quality depends on external web sources.
+* AI-generated information should still be reviewed by users.
+* External API availability can affect execution.
+* Search results can change over time.
+* Large research queries may require additional processing time.
+* API limits and service availability can affect performance.
 
 ---
 
 # 🔮 Future Improvements
 
-Potential future improvements include:
+Planned or potential improvements include:
 
 * Advanced source credibility scoring
 * Improved long-term memory
 * RAG-based knowledge retrieval
 * More advanced research planning
-* Multi-model AI routing
+* Multi-model routing
 * Streaming report generation
-* PDF and DOCX report export
-* Enhanced monitoring and analytics
-* Further frontend and UX improvements
+* PDF / DOCX report export
+* Advanced monitoring and analytics
+* Improved frontend UX
 * Production performance optimization
 
 ---
 
 # ☁️ Deployment
 
-Meridian uses a separated deployment architecture.
+Meridian follows a separated deployment architecture.
 
-| Component  | Platform      |
-| ---------- | ------------- |
-| Frontend   | Vercel        |
-| Backend    | Render        |
-| Database   | Supabase      |
-| AI Model   | Google Gemini |
-| Web Search | Tavily        |
+```text
+Frontend  →  Vercel
+Backend   →  Render
+Database  →  Supabase
+AI        →  Google Gemini
+Search    →  Tavily
+```
 
-For deployment instructions, see:
+For deployment details:
 
 **[`project-docs/DEPLOYMENT.md`](./project-docs/DEPLOYMENT.md)**
 
 ---
 
-# 🌟 Project Highlights
+# 🏆 Project Highlights
 
-* End-to-end Applied GenAI project
-* Multi-agent AI architecture
-* Automated market research workflow
-* Evidence-backed report generation
-* Source and citation traceability
-* FastAPI backend
-* React/Vite frontend
-* Supabase PostgreSQL integration
-* Gemini-powered AI processing
-* Tavily-powered web research
-* Validation and reliability mechanisms
-* Structured project documentation
+<div align="center">
+
+|                           |                               |
+| ------------------------- | ----------------------------- |
+| 🤖 **7 AI Agents**        | Specialized research workflow |
+| 🌐 **Live Web Research**  | Tavily-powered search         |
+| 📑 **Evidence Pipeline**  | Extraction + validation       |
+| 🔗 **Traceable Findings** | Evidence-to-source linking    |
+| 📊 **Structured Reports** | AI-generated market insights  |
+| 🔐 **Authentication**     | Supabase Auth                 |
+| ⚡ **FastAPI Backend**     | API-driven architecture       |
+| 🗄️ **PostgreSQL**        | Persistent research data      |
+
+</div>
 
 ---
 
 # 📌 Conclusion
 
-Meridian demonstrates how a multi-agent AI architecture can automate the complete market research workflow — from a natural-language research query to a structured, evidence-backed report.
+**Meridian** demonstrates how multi-agent AI can automate a complete market research workflow.
 
-The combination of **AI agents, live web research, evidence validation, citation building, report generation, and report linking** provides a traceable research workflow designed for practical market research and strategy use cases.
+From a simple research brief, the system coordinates **planning, web research, evidence extraction, validation, citation building, report generation, and report linking** to produce a structured and traceable research result.
+
+The key strength of Meridian is not just generating a report, but maintaining a connection between **what the report says and the evidence that supports it**.
 
 ---
 
-### Built with
+<div align="center">
 
-**React • Vite • FastAPI • Python • Google Gemini • Tavily • Supabase • PostgreSQL**
+## 🚀 Meridian
 
-**Meridian — AI Market Research & Strategy Engine**
+### AI Market Research & Strategy Engine
+
+**Research smarter. Validate evidence. Build traceable insights.**
+
+<br/>
+
+**React • Vite • FastAPI • Python • Gemini • Tavily • Supabase • PostgreSQL**
+
+</div>
