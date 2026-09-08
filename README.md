@@ -1,4 +1,3 @@
-[Pasted markdown.md](https://github.com/user-attachments/files/31970335/Pasted.markdown.md)
 <div align="center">
 
 # Meridian - AI Market Research & Strategy Engine
