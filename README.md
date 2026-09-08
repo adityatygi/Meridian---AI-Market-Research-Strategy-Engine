@@ -521,10 +521,10 @@ This project was developed collaboratively by:
 
 | Contributor | Role / Contribution |
 |---|---|
-| Shashank Meshram | Project Development |
+| Aditya Tyagi | Project Development |
 | Deepak Chauhan | Project Development |
 | Prajwal Girade | Project Development |
-| Aditya Tyagi | Project Development |
+| Shashank Meshram | Project Development |
 | Vikram Kumar | Project Development |
 | Aryan Roy | Project Development |
 | Priyanshu Singh | Project Development |
