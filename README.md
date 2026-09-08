@@ -1,7 +1,7 @@
 <div align="center">
 
 # Meridian - AI Market Research & Strategy Engine 
-### View Live Application Link : https://meridian-frontend-fawn.vercel.app/
+### View Live Application Link : https://meridian-fronted-resarch-engine.vercel.app/
 
 ### An autonomous multi-agent system that turns a research brief into a fully cited, consulting-grade market report
 
