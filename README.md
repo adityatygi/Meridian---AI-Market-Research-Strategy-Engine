@@ -1,5 +1,3 @@
-<h1 align="center">Meridian - AI Market Research & Strategy Engine</h1>
-
 <p align="center"><div align="center">
 
 <img src="https://github.com/adityatygi/Meridian---AI-Market-Research-Strategy-Engine/raw/main/assets/Meridian%20Logo.png" alt="Meridian Logo" width="180"/>
